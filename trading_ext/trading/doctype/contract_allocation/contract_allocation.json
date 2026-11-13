@@ -1,0 +1,156 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-11-13 15:15:11.420851",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_nafj",
+  "amended_from",
+  "naming_series",
+  "sales_contract",
+  "customer",
+  "commodity",
+  "sell_price",
+  "column_break_ullh",
+  "purchase_contract",
+  "supplier",
+  "allocated_qty",
+  "buy_price",
+  "expected_margin_section",
+  "margin_per_mt",
+  "expected_margin"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_nafj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Contract Allocation",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "CA-.YYYY.-.####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "CA-.YYYY.-.####"
+  },
+  {
+   "fieldname": "sales_contract",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sales Contract",
+   "options": "Trade Contract",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "sales_contract.party",
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fetch_from": "sales_contract.commodity",
+   "fieldname": "commodity",
+   "fieldtype": "Link",
+   "label": "Commodity",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ullh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "purchase_contract",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Purchase Contract",
+   "options": "Trade Contract",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "purchase_contract.party_name",
+   "fieldname": "supplier",
+   "fieldtype": "Data",
+   "label": "Supplier"
+  },
+  {
+   "fieldname": "expected_margin_section",
+   "fieldtype": "Section Break",
+   "label": "Expected Margin"
+  },
+  {
+   "fieldname": "margin_per_mt",
+   "fieldtype": "Currency",
+   "label": "Margin per MT",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expected_margin",
+   "fieldtype": "Currency",
+   "label": "Expected Margin",
+   "read_only": 1
+  },
+  {
+   "fieldname": "allocated_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Allocated Qty (MT)",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "sales_contract.price_per_mt",
+   "fieldname": "sell_price",
+   "fieldtype": "Data",
+   "label": "Sell Price per MT"
+  },
+  {
+   "fetch_from": "purchase_contract.price_per_mt",
+   "fieldname": "buy_price",
+   "fieldtype": "Currency",
+   "label": "Buy Price per MT"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-11-13 16:39:25.932188",
+ "modified_by": "Administrator",
+ "module": "Trading",
+ "name": "Contract Allocation",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

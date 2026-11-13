@@ -1,0 +1,101 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "creation": "2026-11-13 18:04:39.500917",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "cost_type",
+  "currency",
+  "exchange_rate",
+  "estimated_amount",
+  "accrued_amount",
+  "actual_amount",
+  "amount_usd",
+  "supplier",
+  "purchase_invoice"
+ ],
+ "fields": [
+  {
+   "fieldname": "cost_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cost Type",
+   "options": "Shipment Cost Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "1",
+   "fieldname": "exchange_rate",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Exchange Rate"
+  },
+  {
+   "fieldname": "estimated_amount",
+   "fieldtype": "Currency",
+   "label": "Estimated Amount",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "accrued_amount",
+   "fieldtype": "Currency",
+   "label": "Accrued Amount",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "actual_amount",
+   "fieldtype": "Currency",
+   "label": "Actual Amount",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "amount_usd",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount (USD)",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Purchase Invoice",
+   "options": "Purchase Invoice",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-11-13 18:11:33.627519",
+ "modified_by": "Administrator",
+ "module": "Trading",
+ "name": "Shipment Cost",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

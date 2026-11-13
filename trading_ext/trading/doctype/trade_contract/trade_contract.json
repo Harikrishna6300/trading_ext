@@ -1,0 +1,256 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:naming_series",
+ "creation": "2026-11-13 12:22:28.116618",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_zdgc",
+  "amended_from",
+  "contract_type",
+  "party_type",
+  "party",
+  "party_name",
+  "company",
+  "column_break_xykz",
+  "contract_date",
+  "commodity",
+  "incoterm",
+  "currency",
+  "status",
+  "naming_series",
+  "quantity_and_price_section",
+  "price_per_mt",
+  "contract_qty",
+  "tolerance_",
+  "column_break_kzlv",
+  "shipped_qty",
+  "balance_qty",
+  "invoiced_qty",
+  "allocated_qty",
+  "shipment_window_and_dimensions_section",
+  "shipment_from",
+  "shipment_to",
+  "column_break_cuvp",
+  "trader",
+  "region",
+  "country"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_zdgc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Trade Contract",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "contract_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Contract Type",
+   "options": "Sales\nPurchase",
+   "reqd": 1
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Select",
+   "label": "Party Type",
+   "options": "Customer\nSupplier"
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "label": "Party",
+   "options": "party_type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "party_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Party Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "column_break_xykz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "contract_date",
+   "fieldtype": "Date",
+   "label": "Contract Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "commodity",
+   "fieldtype": "Link",
+   "label": "Commodity",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "incoterm",
+   "fieldtype": "Link",
+   "label": "Incoterm",
+   "options": "Incoterm"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nOpen\nPartially Shipped\nFully Shipped\nClosed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity_and_price_section",
+   "fieldtype": "Section Break",
+   "label": "Quantity and Price"
+  },
+  {
+   "fieldname": "price_per_mt",
+   "fieldtype": "Currency",
+   "label": "Price per MT",
+   "options": "currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tolerance_",
+   "fieldtype": "Percent",
+   "label": "Tolerance %"
+  },
+  {
+   "fieldname": "column_break_kzlv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shipped_qty",
+   "fieldtype": "Float",
+   "label": "Shipped Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "balance_qty",
+   "fieldtype": "Float",
+   "label": "Balance Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "invoiced_qty",
+   "fieldtype": "Float",
+   "label": "Invoiced Qty"
+  },
+  {
+   "fieldname": "allocated_qty",
+   "fieldtype": "Float",
+   "label": "Allocated Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shipment_window_and_dimensions_section",
+   "fieldtype": "Section Break",
+   "label": "Shipment Window and Dimensions"
+  },
+  {
+   "fieldname": "shipment_from",
+   "fieldtype": "Date",
+   "label": "Shipment From"
+  },
+  {
+   "fieldname": "shipment_to",
+   "fieldtype": "Date",
+   "label": "Shipment To"
+  },
+  {
+   "fieldname": "column_break_cuvp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "trader",
+   "fieldtype": "Link",
+   "label": "Trader",
+   "options": "Sales Person"
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "label": "Region",
+   "options": "Territory"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "default": "TC-.YYYY.-.####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "TC-.YYYY.-.####"
+  },
+  {
+   "fieldname": "contract_qty",
+   "fieldtype": "Float",
+   "label": "Contract Qty (MT)",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-11-13 16:06:20.557107",
+ "modified_by": "Administrator",
+ "module": "Trading",
+ "name": "Trade Contract",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "party_name",
+ "track_changes": 1
+}

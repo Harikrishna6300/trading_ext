@@ -1,0 +1,254 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "naming_series:naming_series",
+ "creation": "2026-11-13 18:12:04.251198",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_nljw",
+  "amended_from",
+  "naming_series",
+  "contract_allocation",
+  "sales_contract",
+  "purchase_contract",
+  "customer",
+  "supplier",
+  "commodity",
+  "company",
+  "column_break_muib",
+  "status",
+  "loading_type",
+  "shipped_qty_mt",
+  "vessel",
+  "trader",
+  "region",
+  "country",
+  "voyage_and_documents_section",
+  "load_port",
+  "discharge_port",
+  "etd",
+  "eta",
+  "column_break_dcil",
+  "bl_no",
+  "bl_date",
+  "costs_section",
+  "costs",
+  "total_cost_usd"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_nljw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Trade Shipment",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "TSH-.YYYY.-.####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "TSH-.YYYY.-.####"
+  },
+  {
+   "fieldname": "contract_allocation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Contract Allocation",
+   "options": "Contract Allocation",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "contract_allocation.sales_contract",
+   "fieldname": "sales_contract",
+   "fieldtype": "Link",
+   "label": "Sales Contract",
+   "options": "Trade Contract",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "contract_allocation.purchase_contract",
+   "fieldname": "purchase_contract",
+   "fieldtype": "Link",
+   "label": "Purchase Contract",
+   "options": "Trade Contract",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "contract_allocation.customer",
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fetch_from": "contract_allocation.supplier",
+   "fieldname": "supplier",
+   "fieldtype": "Data",
+   "label": "Supplier",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "contract_allocation.commodity",
+   "fieldname": "commodity",
+   "fieldtype": "Link",
+   "label": "Commodity",
+   "options": "Item"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_muib",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Planned",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Planned\nLoading\nSailed\nDelivered\nSettled."
+  },
+  {
+   "fieldname": "loading_type",
+   "fieldtype": "Select",
+   "label": "Loading Type",
+   "options": "Bulk\nContainer",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "shipped_qty_mt",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Shipped Qty (MT)"
+  },
+  {
+   "fieldname": "vessel",
+   "fieldtype": "Link",
+   "label": "Vessel",
+   "options": "Vessel"
+  },
+  {
+   "fetch_from": "sales_contract.trader",
+   "fieldname": "trader",
+   "fieldtype": "Link",
+   "label": "Trader",
+   "options": "Sales Person"
+  },
+  {
+   "fetch_from": "sales_contract.region",
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "label": "Region",
+   "options": "Territory"
+  },
+  {
+   "fetch_from": "sales_contract.country",
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "voyage_and_documents_section",
+   "fieldtype": "Section Break",
+   "label": "Voyage and Documents"
+  },
+  {
+   "fieldname": "load_port",
+   "fieldtype": "Data",
+   "label": "Load Port"
+  },
+  {
+   "fieldname": "discharge_port",
+   "fieldtype": "Data",
+   "label": "Discharge Port"
+  },
+  {
+   "fieldname": "etd",
+   "fieldtype": "Date",
+   "label": "ETD"
+  },
+  {
+   "fieldname": "eta",
+   "fieldtype": "Date",
+   "label": "ETA"
+  },
+  {
+   "fieldname": "column_break_dcil",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bl_no",
+   "fieldtype": "Data",
+   "label": "Bill No"
+  },
+  {
+   "fieldname": "bl_date",
+   "fieldtype": "Date",
+   "label": "Bill Date"
+  },
+  {
+   "fieldname": "costs_section",
+   "fieldtype": "Section Break",
+   "label": "Costs"
+  },
+  {
+   "fieldname": "costs",
+   "fieldtype": "Table",
+   "label": "Costs",
+   "options": "Shipment Cost"
+  },
+  {
+   "fieldname": "total_cost_usd",
+   "fieldtype": "Currency",
+   "label": "Total Cost (USD)",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-11-13 18:30:13.159497",
+ "modified_by": "Administrator",
+ "module": "Trading",
+ "name": "Trade Shipment",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
