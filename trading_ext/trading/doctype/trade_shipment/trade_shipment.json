@@ -43,7 +43,7 @@
   "profitability_usd_section",
   "revenue",
   "product_cost",
-  "other_cost",
+  "other_costs",
   "column_break_qxiv",
   "margin",
   "margin_per_mt"
@@ -272,12 +272,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "other_cost",
-   "fieldtype": "Currency",
-   "label": "Other Cost",
-   "read_only": 1
-  },
-  {
    "fieldname": "column_break_qxiv",
    "fieldtype": "Column Break"
   },
@@ -292,13 +286,19 @@
    "fieldtype": "Currency",
    "label": "Margin per MT",
    "read_only": 1
+  },
+  {
+   "fieldname": "other_costs",
+   "fieldtype": "Currency",
+   "label": "Other Cost",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-16 11:53:05.317756",
+ "modified": "2026-11-16 12:00:01.330300",
  "modified_by": "Administrator",
  "module": "Trading",
  "name": "Trade Shipment",
