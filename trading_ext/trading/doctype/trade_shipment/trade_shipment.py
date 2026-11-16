@@ -30,33 +30,53 @@ class TradeShipment(Document):
         self.company = frappe.db.get_value("Trade Contract", alloc.sales_contract, "company")
 
     def validate_qty(self):
-        if flt(self.shipped_qty) <= 0:
+        qty = flt(self.shipped_qty, 3)
+        if qty <= 0:
             frappe.throw(_("Shipped Qty must be greater than zero"))
 
+        # 1) allocation balance
         allocated = flt(
-            frappe.db.get_value("Contract Allocation", self.contract_allocation, "allocated_qty")
+            frappe.db.get_value("Contract Allocation", self.contract_allocation, "allocated_qty"), 3
         )
-        already = flt(
-            frappe.db.sql(
-                """select coalesce(sum(shipped_qty), 0) from `tabTrade Shipment`
-                where docstatus = 1 and contract_allocation = %s and name != %s""",
-                (self.contract_allocation, self.name or ""),
-            )[0][0]
-        )
-        if flt(self.shipped_qty) > allocated - already:
+        already_alloc = self.get_shipped(self.contract_allocation, "contract_allocation")
+        if qty > flt(allocated - already_alloc, 3):
             frappe.throw(
-                _("Only {0} MT remains on this allocation, you entered {1} MT").format(
-                    allocated - already, self.shipped_qty
+                _("Only {0} MT remains on allocation {1}, you entered {2} MT").format(
+                    flt(allocated - already_alloc, 3), self.contract_allocation, qty
                 )
             )
 
-        sc = frappe.db.get_value(
-            "Trade Contract", self.sales_contract, ["contract_qty", "tolerance_pct"], as_dict=True
+        # 2) contract quantity including tolerance (sales and purchase)
+        for contract, field in (
+            (self.sales_contract, "sales_contract"),
+            (self.purchase_contract, "purchase_contract"),
+        ):
+            data = frappe.db.get_value(
+                "Trade Contract", contract, ["contract_qty", "tolerance_pct"], as_dict=True
+            )
+            tolerance = max(flt(data.tolerance_pct), 0)
+            limit = flt(flt(data.contract_qty) * (1 + tolerance / 100), 3)
+            already = self.get_shipped(contract, field)
+
+            if flt(already + qty, 3) > limit:
+                frappe.throw(
+                    _(
+                        "Shipment exceeds contract {0}: contract qty {1} MT with tolerance "
+                        "{2}% gives a limit of {3} MT. Already shipped {4} MT, this shipment "
+                        "{5} MT."
+                    ).format(contract, flt(data.contract_qty, 3), tolerance, limit, already, qty)
+                )
+
+    def get_shipped(self, value, field):
+        """Submitted shipped qty for a contract or allocation, excluding this document."""
+        return flt(
+            frappe.db.sql(
+                f"""select coalesce(sum(shipped_qty), 0) from `tabTrade Shipment`
+                where docstatus = 1 and {field} = %s and name != %s""",
+                (value, self.name or ""),
+            )[0][0],
+            3,
         )
-        shipped = get_shipped_qty(self.sales_contract, "sales_contract", exclude=self.name)
-        limit = flt(sc.contract_qty) * (1 + flt(sc.tolerance_pct) / 100)
-        if shipped + flt(self.shipped_qty) > limit:
-            frappe.throw(_("Shipment exceeds the sales contract quantity (including tolerance)"))
 
     # ---------- costs and profit (all USD) ----------
     def calculate_costs(self):
@@ -100,8 +120,15 @@ class TradeShipment(Document):
             (self.sales_contract, "sales_contract"),
             (self.purchase_contract, "purchase_contract"),
         ):
-            shipped = get_shipped_qty(contract, field)
-            qty = flt(frappe.db.get_value("Trade Contract", contract, "contract_qty"))
+            shipped = flt(
+                frappe.db.sql(
+                    f"""select coalesce(sum(shipped_qty), 0) from `tabTrade Shipment`
+                    where docstatus = 1 and {field} = %s""",
+                    (contract,),
+                )[0][0],
+                3,
+            )
+            qty = flt(frappe.db.get_value("Trade Contract", contract, "contract_qty"), 3)
             if shipped <= 0:
                 status = "Open"
             elif shipped < qty:
@@ -111,7 +138,7 @@ class TradeShipment(Document):
             frappe.db.set_value(
                 "Trade Contract",
                 contract,
-                {"shipped_qty": shipped, "balance_qty": qty - shipped, "status": status},
+                {"shipped_qty": shipped, "balance_qty": flt(qty - shipped, 3), "status": status},
             )
 
     # ---------- accounting ----------
@@ -186,9 +213,7 @@ class TradeShipment(Document):
         if not total:
             return
 
-        row = je.append(
-            "accounts", {"account": liability, "credit_in_account_currency": total}
-        )
+        row = je.append("accounts", {"account": liability, "credit_in_account_currency": total})
         self.set_dimensions(row)
         je.insert(ignore_permissions=True)
         je.submit()
@@ -210,13 +235,3 @@ class TradeShipment(Document):
             frappe.delete_doc("Sales Invoice", invoice, ignore_permissions=True)
         elif status == 1:
             frappe.throw(_("Cancel Sales Invoice {0} first").format(self.sales_invoice))
-
-
-def get_shipped_qty(contract, field, exclude=None):
-    return flt(
-        frappe.db.sql(
-            f"""select coalesce(sum(shipped_qty), 0) from `tabTrade Shipment`
-            where docstatus = 1 and {field} = %s and name != %s""",
-            (contract, exclude or ""),
-        )[0][0]
-    )

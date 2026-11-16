@@ -139,7 +139,7 @@
    "reqd": 1
   },
   {
-   "fieldname": "tolerance_",
+   "fieldname": "tolerance_pct",
    "fieldtype": "Percent",
    "label": "Tolerance %"
   },
