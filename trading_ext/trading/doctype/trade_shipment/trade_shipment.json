@@ -20,7 +20,7 @@
   "column_break_muib",
   "status",
   "loading_type",
-  "shipped_qty_mt",
+  "shipped_qty",
   "vessel",
   "trader",
   "region",
@@ -35,7 +35,18 @@
   "bl_date",
   "costs_section",
   "costs",
-  "total_cost_usd"
+  "total_cost_usd",
+  "invoicing_and_accounting_section",
+  "sales_invoice",
+  "column_break_xbyb",
+  "accrual_journal_entry",
+  "profitability_usd_section",
+  "revenue",
+  "product_cost",
+  "other_cost",
+  "column_break_qxiv",
+  "margin",
+  "margin_per_mt"
  ],
  "fields": [
   {
@@ -132,12 +143,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "shipped_qty_mt",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Shipped Qty (MT)"
-  },
-  {
    "fieldname": "vessel",
    "fieldtype": "Link",
    "label": "Vessel",
@@ -151,7 +156,6 @@
    "options": "Sales Person"
   },
   {
-   "fetch_from": "sales_contract.region",
    "fieldname": "region",
    "fieldtype": "Link",
    "label": "Region",
@@ -219,13 +223,82 @@
    "fieldtype": "Currency",
    "label": "Total Cost (USD)",
    "read_only": 1
+  },
+  {
+   "fieldname": "shipped_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Shipped Qty (MT)"
+  },
+  {
+   "fieldname": "invoicing_and_accounting_section",
+   "fieldtype": "Section Break",
+   "label": "Invoicing and Accounting"
+  },
+  {
+   "fieldname": "sales_invoice",
+   "fieldtype": "Link",
+   "label": "Sales Invoice",
+   "no_copy": 1,
+   "options": "Sales Invoice",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_xbyb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "accrual_journal_entry",
+   "fieldtype": "Link",
+   "label": "Accrual Journal Entry",
+   "options": "Journal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "profitability_usd_section",
+   "fieldtype": "Section Break",
+   "label": "Profitability (USD)"
+  },
+  {
+   "fieldname": "revenue",
+   "fieldtype": "Currency",
+   "label": "Revenue",
+   "read_only": 1
+  },
+  {
+   "fieldname": "product_cost",
+   "fieldtype": "Currency",
+   "label": "Product Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "other_cost",
+   "fieldtype": "Currency",
+   "label": "Other Cost",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qxiv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "margin",
+   "fieldtype": "Currency",
+   "label": "Margin",
+   "read_only": 1
+  },
+  {
+   "fieldname": "margin_per_mt",
+   "fieldtype": "Currency",
+   "label": "Margin per MT",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-13 18:30:13.159497",
+ "modified": "2026-11-16 11:53:05.317756",
  "modified_by": "Administrator",
  "module": "Trading",
  "name": "Trade Shipment",
@@ -248,6 +321,7 @@
  ],
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
+ "search_fields": "customer",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": []
