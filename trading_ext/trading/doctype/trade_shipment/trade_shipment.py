@@ -3,24 +3,62 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import flt, today
 
+STATUS_ORDER = ["Planned", "Loading", "Sailed", "Delivered", "Settled"]
+
 
 class TradeShipment(Document):
     # ---------- validation ----------
     def validate(self):
-        self.validate_settled_role()
+        self.validate_status_flow()
         self.set_from_allocation()
         self.validate_qty()
         self.calculate_costs()
         self.calculate_profit()
 
-    def validate_settled_role(self):
-        if (
-            self.status == "Settled"
-            and self.has_value_changed("status")
-            and "Finance Manager" not in frappe.get_roles()
-        ):
-            frappe.throw(_("Only a Finance Manager can mark a shipment as Settled"))
+    # ---------- status control ----------
+    def validate_status_flow(self):
+        """Voyage status moves forward one step at a time."""
+        if self.is_new():
+            self.status = "Planned"
+            return
 
+        old = self.get_doc_before_save()
+        if not old or old.status == self.status:
+            return
+
+        old_i = STATUS_ORDER.index(old.status or "Planned")
+        new_i = STATUS_ORDER.index(self.status)
+
+        if new_i != old_i + 1:
+            frappe.throw(
+                _("Status can only move forward one step: from {0} to {1}").format(
+                    old.status, STATUS_ORDER[min(old_i + 1, len(STATUS_ORDER) - 1)]
+                )
+            )
+
+        if self.docstatus == 0 and new_i > 0:
+            frappe.throw(_("Submit the shipment before changing its status"))
+
+        if self.status == "Sailed" and not (self.bl_no and self.bl_date):
+            frappe.throw(_("Enter BL No and BL Date before marking the shipment as Sailed"))
+
+        if self.status == "Settled":
+            if "Finance Manager" not in frappe.get_roles():
+                frappe.throw(_("Only a Finance Manager can mark a shipment as Settled"))
+
+    @frappe.whitelist()
+    def update_status(self, new_status):
+        """Called by the form buttons. Runs the same checks as a normal save."""
+        if new_status not in STATUS_ORDER:
+            frappe.throw(_("Invalid status {0}").format(new_status))
+        if self.docstatus != 1:
+            frappe.throw(_("Submit the shipment before changing its status"))
+        self.check_permission("write")
+        self.status = new_status
+        self.save()
+        return self.status
+
+    # ---------- quantity checks ----------
     def set_from_allocation(self):
         alloc = frappe.get_doc("Contract Allocation", self.contract_allocation)
         if alloc.docstatus != 1:
@@ -47,15 +85,15 @@ class TradeShipment(Document):
             )
 
         # 2) contract quantity including tolerance (sales and purchase)
+        has_tol = frappe.get_meta("Trade Contract").has_field("tolerance_pct")
         for contract, field in (
             (self.sales_contract, "sales_contract"),
             (self.purchase_contract, "purchase_contract"),
         ):
-            data = frappe.db.get_value(
-                "Trade Contract", contract, ["contract_qty", "tolerance_pct"], as_dict=True
-            )
-            tolerance = max(flt(data.tolerance_pct), 0)
-            limit = flt(flt(data.contract_qty) * (1 + tolerance / 100), 3)
+            contract_qty = flt(frappe.db.get_value("Trade Contract", contract, "contract_qty"), 3)
+            tol = flt(frappe.db.get_value("Trade Contract", contract, "tolerance_pct")) if has_tol else 0
+            tolerance = max(tol, 0)
+            limit = flt(contract_qty * (1 + tolerance / 100), 3)
             already = self.get_shipped(contract, field)
 
             if flt(already + qty, 3) > limit:
@@ -64,7 +102,7 @@ class TradeShipment(Document):
                         "Shipment exceeds contract {0}: contract qty {1} MT with tolerance "
                         "{2}% gives a limit of {3} MT. Already shipped {4} MT, this shipment "
                         "{5} MT."
-                    ).format(contract, flt(data.contract_qty, 3), tolerance, limit, already, qty)
+                    ).format(contract, contract_qty, tolerance, limit, already, qty)
                 )
 
     def get_shipped(self, value, field):
