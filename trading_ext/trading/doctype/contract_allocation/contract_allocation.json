@@ -112,7 +112,7 @@
   {
    "fetch_from": "sales_contract.price_per_mt",
    "fieldname": "sell_price",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "label": "Sell Price per MT"
   },
   {

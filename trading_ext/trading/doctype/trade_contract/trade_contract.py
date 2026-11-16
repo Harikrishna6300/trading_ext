@@ -1,16 +1,14 @@
-# Copyright (c) 2026, hari and contributors
-# For license information, please see license.txt
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils import flt
 
 
 class TradeContract(Document):
     def validate(self):
         self.set_party_details()
         self.validate_dates()
-        self.balance_qty = (self.contract_qty or 0) - (self.shipped_qty or 0)
+        self.balance_qty = flt(self.contract_qty) - flt(self.shipped_qty)
 
     def set_party_details(self):
         self.party_type = "Supplier" if self.contract_type == "Purchase" else "Customer"
