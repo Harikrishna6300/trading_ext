@@ -6,8 +6,54 @@ from frappe.utils import flt, getdate, today
 STATUS_ORDER = ["Planned", "Loading", "Sailed", "Delivered", "Settled"]
 STATUS_ROLE = "Finance Manager"
 
+# Accounting records that only carry the shipment as a dimension tag
+IGNORE_LINKED = (
+    "Journal Entry",
+    "Sales Invoice",
+    "Payment Entry",
+    "GL Entry",
+    "Payment Ledger Entry",
+)
+
 
 class TradeShipment(Document):
+    # ---------- link-check handling (permanent fix) ----------
+    def set_ignore_links(self):
+        self.ignore_linked_doctypes = IGNORE_LINKED
+
+    def before_cancel(self):
+        self.set_ignore_links()
+        self.validate_no_payment_before_cancel()
+
+    def on_trash(self):
+        self.set_ignore_links()
+
+    def validate_no_payment_before_cancel(self):
+        """A paid invoice must be reversed first, with a clear message."""
+        if not self.sales_invoice:
+            return
+        inv = frappe.db.get_value(
+            "Sales Invoice",
+            self.sales_invoice,
+            ["docstatus", "grand_total", "outstanding_amount"],
+            as_dict=True,
+        )
+        if not inv:
+            return
+        if inv.docstatus == 1:
+            if flt(inv.outstanding_amount) < flt(inv.grand_total):
+                frappe.throw(
+                    _(
+                        "Sales Invoice {0} has payments. Cancel the Payment Entry first, "
+                        "then cancel the Sales Invoice, then cancel this shipment."
+                    ).format(self.sales_invoice)
+                )
+            frappe.throw(
+                _("Cancel Sales Invoice {0} first, then cancel this shipment.").format(
+                    self.sales_invoice
+                )
+            )
+
     # ---------- validation ----------
     def validate(self):
         self.validate_status_flow()
@@ -171,7 +217,7 @@ class TradeShipment(Document):
         self.create_accrual_entry()
 
     def on_cancel(self):
-        self.ignore_linked_doctypes = ("Journal Entry", "Sales Invoice")
+        self.set_ignore_links()
         self.cancel_accrual_entry()
         self.remove_sales_invoice()
         self.update_contracts()
@@ -325,6 +371,7 @@ class TradeShipment(Document):
         if self.accrual_journal_entry:
             je = frappe.get_doc("Journal Entry", self.accrual_journal_entry)
             if je.docstatus == 1:
+                je.flags.ignore_links = True
                 je.cancel()
 
     def remove_sales_invoice(self):
@@ -335,8 +382,7 @@ class TradeShipment(Document):
             invoice = self.sales_invoice
             self.db_set("sales_invoice", None)
             frappe.delete_doc("Sales Invoice", invoice, ignore_permissions=True)
-        elif status == 1:
-            frappe.throw(_("Cancel Sales Invoice {0} first").format(self.sales_invoice))
+        # a submitted invoice is already blocked in before_cancel
 
 
 # ---------- automatic status rules (module level) ----------
