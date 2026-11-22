@@ -133,7 +133,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Planned\nLoading\nSailed\nDelivered\nSettled."
+   "options": "Planned\nLoading\nSailed\nDelivered\nSettled"
   },
   {
    "fieldname": "loading_type",
@@ -147,7 +147,8 @@
    "fieldname": "vessel",
    "fieldtype": "Link",
    "label": "Vessel",
-   "options": "Vessel"
+   "options": "Vessel",
+   "allow_on_submit": 1
   },
   {
    "fetch_from": "sales_contract.trader",
@@ -187,12 +188,14 @@
   {
    "fieldname": "etd",
    "fieldtype": "Date",
-   "label": "ETD"
+   "label": "ETD",
+   "allow_on_submit": 1
   },
   {
    "fieldname": "eta",
    "fieldtype": "Date",
-   "label": "ETA"
+   "label": "ETA",
+   "allow_on_submit": 1
   },
   {
    "fieldname": "column_break_dcil",
@@ -201,12 +204,14 @@
   {
    "fieldname": "bl_no",
    "fieldtype": "Data",
-   "label": "Bill No"
+   "label": "Bill No",
+   "allow_on_submit": 1
   },
   {
    "fieldname": "bl_date",
    "fieldtype": "Date",
-   "label": "Bill Date"
+   "label": "Bill Date",
+   "allow_on_submit": 1
   },
   {
    "fieldname": "costs_section",

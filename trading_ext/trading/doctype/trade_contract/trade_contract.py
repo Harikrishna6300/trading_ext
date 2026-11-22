@@ -20,7 +20,7 @@ class TradeContract(Document):
             frappe.throw(_("Shipment To cannot be before Shipment From"))
 
     def on_submit(self):
-        self.db_set("status", "Open")
+        self.db_set({"status": "Open", "shipping_status": "Open"})
 
     def on_cancel(self):
-        self.db_set("status", "Closed")
+        self.db_set({"status": "Closed", "shipping_status": "Closed"})

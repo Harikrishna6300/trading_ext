@@ -1,6 +1,3 @@
-// Copyright (c) 2026, hari and contributors
-// For license information, please see license.txt
-
 const STATUS_ORDER = ["Planned", "Loading", "Sailed", "Delivered", "Settled"];
 
 frappe.ui.form.on("Trade Shipment", {
@@ -9,16 +6,14 @@ frappe.ui.form.on("Trade Shipment", {
     },
 
     refresh(frm) {
-        // Next-status button, only on submitted shipments
         if (frm.doc.docstatus !== 1) return;
+
+        // Manual status change is for Finance Manager only
+        if (!frappe.user.has_role("Finance Manager")) return;
 
         const i = STATUS_ORDER.indexOf(frm.doc.status || "Planned");
         if (i < 0 || i >= STATUS_ORDER.length - 1) return;
-
         const next = STATUS_ORDER[i + 1];
-
-        // Only Finance Manager sees the Settled button
-        if (next === "Settled" && !frappe.user.has_role("Finance Manager")) return;
 
         frm.add_custom_button(
             __("Mark as {0}", [next]),
@@ -34,13 +29,5 @@ frappe.ui.form.on("Trade Shipment", {
             },
             __("Status")
         );
-
-        frm.page.set_indicator(__(frm.doc.status), {
-            Planned: "gray",
-            Loading: "orange",
-            Sailed: "blue",
-            Delivered: "green",
-            Settled: "darkgreen",
-        }[frm.doc.status] || "gray");
     },
 });

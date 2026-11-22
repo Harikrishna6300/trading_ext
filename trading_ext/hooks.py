@@ -272,3 +272,20 @@ app_license = "mit"
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
 
+scheduler_events = {
+    "hourly": [
+        "trading_ext.trading.doctype.trade_shipment.trade_shipment.auto_update_status"
+    ]
+}
+
+doc_events = {
+    "Payment Entry": {
+        "on_submit": "trading_ext.trading.doctype.trade_shipment.trade_shipment.on_payment"
+    },
+    "Journal Entry": {
+        "on_submit": "trading_ext.trading.doctype.trade_shipment.trade_shipment.on_payment"
+    },
+    "Sales Invoice": {
+        "on_submit": "trading_ext.trading.doctype.trade_shipment.trade_shipment.on_payment"
+    },
+}
